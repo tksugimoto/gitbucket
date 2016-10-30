@@ -1,4 +1,4 @@
-@(id: String, value: String, style: String = "")(html: Html = Html(""))
+@(id: String, value: String, style: String = "", targetInputId: String = "")(html: Html = Html(""))
 @if(html.body.nonEmpty){
   <div class="input-group" style="margin-bottom: 0px;">
     @html
@@ -28,6 +28,16 @@
   }
   // if flash is not available, remove the copy button.
   if(!flashAvailable) {
+    @if(targetInputId.nonEmpty){
+      // if document.execCommand('copy') is available, use it for copy.
+      if (typeof document.queryCommandSupported === 'function' && document.queryCommandSupported('copy')) {
+        $('#@id').on('click', function() {
+          $('#@targetInputId').select();
+          document.execCommand('copy');
+        });
+        return
+      }
+    }
     $('#@id').remove();
     return
   }
