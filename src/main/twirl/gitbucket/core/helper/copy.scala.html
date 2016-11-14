@@ -31,9 +31,16 @@
     @if(targetInputId.nonEmpty){
       // if document.execCommand('copy') is available, use it for copy.
       if (typeof document.queryCommandSupported === 'function' && document.queryCommandSupported('copy')) {
+        var title = $('#@id').attr('title');
+        $('#@id').tooltip({
+          @* if default container is used then 2 lines tooltip text is displayd because tooptip width is narrow. *@
+          container: 'body'
+        });
         $('#@id').on('click', function() {
           $('#@targetInputId').select();
           document.execCommand('copy');
+          $('#@id').attr('title', 'copied!').tooltip('fixTitle').tooltip('show');
+          $('#@id').attr('title', title).tooltip('fixTitle');
         });
         return
       }
