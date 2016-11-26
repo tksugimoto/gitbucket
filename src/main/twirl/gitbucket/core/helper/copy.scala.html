@@ -30,7 +30,7 @@
   if(!flashAvailable) {
     @if(targetTextId.nonEmpty){
       // if document.execCommand('copy') is available, use it for copy.
-      if (typeof document.queryCommandSupported === 'function' && document.queryCommandSupported('copy')) {
+      if (document.queryCommandSupported('copy')) {
         var title = $('#@id').attr('title');
         $('#@id').tooltip({
           @* if default container is used then 2 lines tooltip text is displayd because tooptip width is narrow. *@
