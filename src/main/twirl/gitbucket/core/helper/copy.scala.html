@@ -1,4 +1,4 @@
-@(id: String, value: String, style: String = "", targetInputId: String = "")(html: Html = Html(""))
+@(id: String, value: String, style: String = "", targetTextId: String = "")(html: Html = Html(""))
 @if(html.body.nonEmpty){
   <div class="input-group" style="margin-bottom: 0px;">
     @html
@@ -28,7 +28,7 @@
   }
   // if flash is not available, remove the copy button.
   if(!flashAvailable) {
-    @if(targetInputId.nonEmpty){
+    @if(targetTextId.nonEmpty){
       // if document.execCommand('copy') is available, use it for copy.
       if (typeof document.queryCommandSupported === 'function' && document.queryCommandSupported('copy')) {
         var title = $('#@id').attr('title');
@@ -37,7 +37,20 @@
           container: 'body'
         });
         $('#@id').on('click', function() {
-          $('#@targetInputId').select();
+          var target = document.getElementById('@targetTextId');
+          if (!target) { @* target's id is incorrect. Fix argument's value *@
+            $('#@id').attr('title', 'failed to copy').tooltip('fixTitle').tooltip('show');
+            return;
+          }
+          if (typeof target.select === 'function') {
+            target.select();
+          } else {
+            var range = document.createRange();
+            range.selectNodeContents(target);
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+          }
           document.execCommand('copy');
           $('#@id').attr('title', 'copied!').tooltip('fixTitle').tooltip('show');
           $('#@id').attr('title', title).tooltip('fixTitle');
